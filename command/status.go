@@ -1,57 +1,42 @@
 package command
 
 import (
-	"flag"
 	"fmt"
 	"sideload/app"
 	"sideload/config"
 )
 
-func Status(flagset *flag.FlagSet, sideloadConfig config.SideloadConfig) {
+func Status(sideloadConfig config.SideloadConfig) {
 	comparisons := app.CompareProjectFiles(sideloadConfig)
-	if len(comparisons) == 0 {
+	if len(comparisons.AllComparisons) == 0 {
 		fmt.Printf("There are no files being tracked by 'sideload'.\n")
 		fmt.Printf("Edit '%v' to track some files.\n", config.CONFIG_FILENAME)
 		return
 	}
-
-	wouldRestore := app.FilterOfFileComparison(comparisons, func(fc app.FileComparison) bool {
-		return fc.Inclination == app.WILL_RESTORE
-	})
-	wouldStore := app.FilterOfFileComparison(comparisons, func(fc app.FileComparison) bool {
-		return fc.Inclination == app.WILL_STORE
-	})
-	wouldNothing := app.FilterOfFileComparison(comparisons, func(fc app.FileComparison) bool {
-		return fc.Inclination == app.NONE
-	})
-	bothMissing := app.FilterOfFileComparison(comparisons, func(fc app.FileComparison) bool {
-		return fc.Inclination == app.BOTH_MISSING
-	})
-
-	if len(wouldRestore) > 0 {
+	if len(comparisons.WouldRestore) > 0 {
 		fmt.Printf("Would restore with 'sideload restore' from '%v':\n", sideloadConfig.HomeProjectDir)
-		printFileList(" -->", wouldRestore)
+		printFileList(" -->", comparisons.WouldRestore)
 		fmt.Println()
 	}
-	if len(wouldStore) > 0 {
+	if len(comparisons.WouldStore) > 0 {
 		fmt.Printf("Would store with 'sideload store' into '%v':\n", sideloadConfig.HomeProjectDir)
-		printFileList("<-- ", wouldStore)
+		printFileList("<-- ", comparisons.WouldStore)
 		fmt.Println()
 	}
-	if len(wouldNothing) > 0 {
+	if len(comparisons.WouldNothing) > 0 {
 		fmt.Println("No changes:")
-		printFileList(" == ", wouldNothing)
+		printFileList(" == ", comparisons.WouldNothing)
 		fmt.Println()
 	}
-	if len(bothMissing) > 0 {
+	if len(comparisons.BothMissing) > 0 {
 		fmt.Println("Missing:")
-		printFileList(" !! ", bothMissing)
+		printFileList(" !! ", comparisons.BothMissing)
 		fmt.Println()
 	}
 }
 
 func printFileList(prefix string, files []app.FileComparison) {
 	for _, file := range files {
-		fmt.Printf("  %s  %s\n", prefix, file.Relativefile)
+		fmt.Printf("  %s  %s\n", prefix, file.RelativeFile)
 	}
 }

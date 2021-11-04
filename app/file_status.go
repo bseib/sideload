@@ -22,10 +22,18 @@ const (
 )
 
 type FileComparison struct {
-	Relativefile string
+	RelativeFile string
 	HomeFile     string
 	ProjectFile  string
 	Inclination  InclinationEnum
+}
+
+type ProjectFilesComparison struct {
+	AllComparisons []FileComparison
+	WouldRestore   []FileComparison
+	WouldStore     []FileComparison
+	WouldNothing   []FileComparison
+	BothMissing    []FileComparison
 }
 
 type FileSituation struct {
@@ -87,24 +95,42 @@ func GetFileComparison(relativeFile string, homeFile string, projectFile string)
 		}
 	}
 	return FileComparison{
-		Relativefile: relativeFile,
+		RelativeFile: relativeFile,
 		HomeFile:     homeFile,
 		ProjectFile:  projectFile,
 		Inclination:  inclination,
 	}
 }
 
-func CompareProjectFiles(sideloadConfig config.SideloadConfig) []FileComparison {
+func CompareProjectFiles(sideloadConfig config.SideloadConfig) ProjectFilesComparison {
 	fileList := sideloadConfig.ProjectConfig.Files.Track
 	sort.Strings(fileList)
-	comparisons := make([]FileComparison, len(fileList))
+	allComparisons := make([]FileComparison, len(fileList))
 	for i, file := range fileList {
 		homeFile := filepath.Join(sideloadConfig.HomeProjectDir, file)
 		projectFile := filepath.Join(sideloadConfig.ProjectConfig.ProjectDir, file)
 		comparison := GetFileComparison(file, homeFile, projectFile)
-		comparisons[i] = comparison
+		allComparisons[i] = comparison
 	}
-	return comparisons
+	wouldRestore := FilterOfFileComparison(allComparisons, func(fc FileComparison) bool {
+		return fc.Inclination == WILL_RESTORE
+	})
+	wouldStore := FilterOfFileComparison(allComparisons, func(fc FileComparison) bool {
+		return fc.Inclination == WILL_STORE
+	})
+	wouldNothing := FilterOfFileComparison(allComparisons, func(fc FileComparison) bool {
+		return fc.Inclination == NONE
+	})
+	bothMissing := FilterOfFileComparison(allComparisons, func(fc FileComparison) bool {
+		return fc.Inclination == BOTH_MISSING
+	})
+	return ProjectFilesComparison{
+		AllComparisons: allComparisons,
+		WouldRestore:   wouldRestore,
+		WouldStore:     wouldStore,
+		WouldNothing:   wouldNothing,
+		BothMissing:    bothMissing,
+	}
 }
 
 func FilterOfFileComparison(collection []FileComparison, keep func(FileComparison) bool) []FileComparison {

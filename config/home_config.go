@@ -46,11 +46,11 @@ func GetHomeConfig() HomeConfig {
 		text = strings.TrimRight(text, "\r\n")
 		if err == nil && (len(text) == 0 || strings.HasPrefix(text, "y") || strings.HasPrefix(text, "Y")) {
 			fmt.Printf("Creating directory '%v'.\n", sideloadHomeDirPath)
-			err = os.Mkdir(sideloadHomeDirPath, 0700)
+			err = os.MkdirAll(sideloadHomeDirPath, 0700)
 			if err != nil {
 				log.Fatal(err)
 			}
-			err = os.Mkdir(sideloadStorageDir, 0700)
+			err = os.MkdirAll(sideloadStorageDir, 0700)
 			if err != nil {
 				log.Fatal(err)
 			}

@@ -1,19 +1,20 @@
 package main
 
 import (
-	"sideload/command"
-	"sideload/config"
 	"flag"
 	"fmt"
 	"os"
+	"sideload/command"
+	"sideload/config"
 )
 
 func main() {
 	var homeConfig = config.GetHomeConfig()
 
-	// Subcommands
+	// Subcommand flags
 	initFlagSet := flag.NewFlagSet("init", flag.ExitOnError)
-	statusFlagSet := flag.NewFlagSet("status", flag.ExitOnError)
+	storeFlagSet := flag.NewFlagSet("store", flag.ExitOnError)
+	var storeForce = storeFlagSet.Bool("f", false, "Force specified files to be stored")
 
 	// init flags
 	//	var initYo = initFlagSet.String("yo", "", "yo yo yo")
@@ -32,10 +33,10 @@ func main() {
 		case "restore":
 			command.Restore()
 		case "status":
-			statusFlagSet.Parse(os.Args[2:])
-			command.Status(statusFlagSet, config.GetSideloadConfig(homeConfig))
+			command.Status(config.GetSideloadConfig(homeConfig))
 		case "store":
-			command.Store()
+			storeFlagSet.Parse(os.Args[2:])
+			command.Store(config.GetSideloadConfig(homeConfig), storeFlagSet.Args(), *storeForce)
 		default:
 			dieUsage()
 		}
@@ -51,8 +52,10 @@ func dieUsage() {
 	fmt.Println("usage: sideload <command> [<args>]\n" +
 		"\n" +
 		"Common commands:\n" +
-		"   init      init a directory to manage its sideloaded files\n" +
-		"   status    show which sideloaded files need copied or have changed\n")
+		"   init      init a directory to manage its sideloaded (tracked) files\n" +
+		"   status    show which tracked files would be copied to/from storage\n" +
+		"   store     store tracked files to storage dir, if they are newer\n" +
+		"   restore   restore tracked files to local project dir from storage, if they are newer\n")
 	flag.PrintDefaults()
 	os.Exit(1)
 }
