@@ -6,8 +6,8 @@ import (
 	"github.com/hexops/gotextdiff/myers"
 	"github.com/hexops/gotextdiff/span"
 	"os"
-	"sideload/app"
-	"sideload/config"
+	"github.com/bseib/sideload/app"
+	"github.com/bseib/sideload/config"
 )
 
 func Diff(sideloadConfig config.SideloadConfig) {

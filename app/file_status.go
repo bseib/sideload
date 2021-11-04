@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"sideload/config"
+	"github.com/bseib/sideload/config"
 	"sort"
 	"time"
 )

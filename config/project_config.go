@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"sideload/util"
+	"github.com/bseib/sideload/util"
 	"strings"
 )
 

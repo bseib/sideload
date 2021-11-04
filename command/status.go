@@ -2,8 +2,8 @@ package command
 
 import (
 	"fmt"
-	"sideload/app"
-	"sideload/config"
+	"github.com/bseib/sideload/app"
+	"github.com/bseib/sideload/config"
 )
 
 func Status(sideloadConfig config.SideloadConfig) {

@@ -1,4 +1,4 @@
-module sideload
+module github.com/bseib/sideload
 
 go 1.17
 

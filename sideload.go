@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"sideload/command"
-	"sideload/config"
+	"github.com/bseib/sideload/command"
+	"github.com/bseib/sideload/config"
 )
 
 // real values set at link time with go -ldflags

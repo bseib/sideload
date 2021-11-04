@@ -3,9 +3,9 @@ package command
 import (
 	"fmt"
 	"os"
-	"sideload/app"
-	"sideload/config"
-	"sideload/util"
+	"github.com/bseib/sideload/app"
+	"github.com/bseib/sideload/config"
+	"github.com/bseib/sideload/util"
 )
 
 func Restore(sideloadConfig config.SideloadConfig, specificFiles []string, isForce bool) {
