@@ -1,7 +1,7 @@
 package command
 
 import (
-	"box/config"
+	"sideload/config"
 	"fmt"
 )
 

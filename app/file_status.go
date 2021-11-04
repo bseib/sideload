@@ -1,13 +1,13 @@
 package app
 
 import (
-	"box/config"
 	"crypto/md5"
 	"fmt"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"sideload/config"
 	"sort"
 	"time"
 )
@@ -92,14 +92,14 @@ func GetFileComparison(relativeFile string, homeFile string, projectFile string)
 	}
 }
 
-func CompareProjectFiles(boxConfig config.BoxConfig) []FileComparison {
-	fileList := boxConfig.ProjectConfig.Files.Track
+func CompareProjectFiles(sideloadConfig config.SideloadConfig) []FileComparison {
+	fileList := sideloadConfig.ProjectConfig.Files.Track
 	sort.Strings(fileList)
 	comparisons := make([]FileComparison, len(fileList))
 	for i, file := range fileList {
-		uuidDir := filepath.Join(boxConfig.HomeConfig.StorageDir, boxConfig.ProjectConfig.Project.Uuid)
-		homeFile := filepath.Join(uuidDir, file)
-		projectFile := filepath.Join(boxConfig.ProjectConfig.ProjectDir, file)
+		projectDir := filepath.Join(sideloadConfig.HomeConfig.StorageDir, sideloadConfig.ProjectConfig.Project.Name)
+		homeFile := filepath.Join(projectDir, file)
+		projectFile := filepath.Join(sideloadConfig.ProjectConfig.ProjectDir, file)
 		comparison := GetFileComparison(file, homeFile, projectFile)
 		comparisons[i] = comparison
 	}

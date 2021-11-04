@@ -5,14 +5,14 @@ package config
 //	configFilePath string
 //}
 
-type BoxConfig struct {
+type SideloadConfig struct {
 	HomeConfig    HomeConfig
 	ProjectConfig ProjectConfig
 }
 
-func GetBoxConfig(homeConfig HomeConfig) BoxConfig {
+func GetSideloadConfig(homeConfig HomeConfig) SideloadConfig {
 	projectConfig := GetProjectConfig()
-	return BoxConfig{
+	return SideloadConfig{
 		ProjectConfig: projectConfig,
 		HomeConfig:    homeConfig,
 	}

@@ -1,14 +1,14 @@
 package command
 
 import (
-	"box/app"
-	"box/config"
+	"sideload/app"
+	"sideload/config"
 	"flag"
 	"fmt"
 )
 
-func Status(flagset *flag.FlagSet, boxConfig config.BoxConfig) {
-	comparisons := app.CompareProjectFiles(boxConfig)
+func Status(flagset *flag.FlagSet, sideloadConfig config.SideloadConfig) {
+	comparisons := app.CompareProjectFiles(sideloadConfig)
 	wouldRestore := app.FilterOfFileComparison(comparisons, func(fc app.FileComparison) bool {
 		return fc.Inclination == app.WILL_RESTORE
 	})

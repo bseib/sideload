@@ -14,53 +14,53 @@ type HomeConfig struct {
 	StorageDir string
 }
 
-func getBoxHomeDirEnv() string {
-	return os.Getenv("BOXHOME")
+func getSideloadHomeDirEnv() string {
+	return os.Getenv("SIDELOADHOME")
 }
 
-func getBoxHomeDirPath() string {
-	var boxHomeDirEnv = getBoxHomeDirEnv()
-	if len(boxHomeDirEnv) == 0 {
+func getSideloadHomeDirPath() string {
+	var sideloadHomeDirEnv = getSideloadHomeDirEnv()
+	if len(sideloadHomeDirEnv) == 0 {
 		homedir, err := os.UserHomeDir()
 		if err != nil {
 			fmt.Println("Cannot determine your home directory.")
 			log.Fatal(err)
 		}
-		return filepath.Join(filepath.Clean(homedir), ".box")
+		return filepath.Join(filepath.Clean(homedir), ".sideload")
 	} else {
-		return filepath.Clean(boxHomeDirEnv)
+		return filepath.Clean(sideloadHomeDirEnv)
 	}
 }
 
 func GetHomeConfig() HomeConfig {
-	boxHomeDirPath := getBoxHomeDirPath()
-	boxStorageDir := filepath.Join(filepath.Clean(boxHomeDirPath), "storage")
-	if _, err := os.Stat(boxHomeDirPath); os.IsNotExist(err) {
-		var boxHomeDirEnv = getBoxHomeDirEnv()
-		if len(boxHomeDirEnv) == 0 {
-			fmt.Printf("BOXHOME environment variable has not been set. Using default: '%v'\n", boxHomeDirPath)
+	sideloadHomeDirPath := getSideloadHomeDirPath()
+	sideloadStorageDir := filepath.Join(filepath.Clean(sideloadHomeDirPath), "storage")
+	if _, err := os.Stat(sideloadHomeDirPath); os.IsNotExist(err) {
+		var sideloadHomeDirEnv = getSideloadHomeDirEnv()
+		if len(sideloadHomeDirEnv) == 0 {
+			fmt.Printf("SIDELOADHOME environment variable has not been set. Using default: '%v'\n", sideloadHomeDirPath)
 		}
-		fmt.Printf("Directory '%v' does not exist. Create it now? [Y/n] ", boxHomeDirPath)
+		fmt.Printf("Directory '%v' does not exist. Create it now? [Y/n] ", sideloadHomeDirPath)
 		reader := bufio.NewReader(os.Stdin)
 		text, err := reader.ReadString('\n')
 		text = strings.TrimRight(text, "\r\n")
 		if err == nil && (len(text) == 0 || strings.HasPrefix(text, "y") || strings.HasPrefix(text, "Y")) {
-			fmt.Printf("Creating directory '%v'.\n", boxHomeDirPath)
-			err = os.Mkdir(boxHomeDirPath, 0700)
+			fmt.Printf("Creating directory '%v'.\n", sideloadHomeDirPath)
+			err = os.Mkdir(sideloadHomeDirPath, 0700)
 			if err != nil {
 				log.Fatal(err)
 			}
-			err = os.Mkdir(boxStorageDir, 0700)
+			err = os.Mkdir(sideloadStorageDir, 0700)
 			if err != nil {
 				log.Fatal(err)
 			}
 		} else {
-			fmt.Println("A BOXHOME directory is required and must exist to do anything.")
+			fmt.Println("A SIDELOADHOME directory is required and must exist to do anything.")
 			os.Exit(1)
 		}
 	}
 	return HomeConfig{
-		HomeDir:    boxHomeDirPath,
-		StorageDir: boxStorageDir,
+		HomeDir:    sideloadHomeDirPath,
+		StorageDir: sideloadStorageDir,
 	}
 }

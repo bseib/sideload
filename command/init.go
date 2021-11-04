@@ -1,10 +1,10 @@
 package command
 
 import (
-	"box/config"
+	"sideload/config"
 	"flag"
 )
 
-func Init(flagset *flag.FlagSet) {
+func Init(flagset *flag.FlagSet, homeConfig config.HomeConfig) {
 	config.InitProjectConfig()
 }

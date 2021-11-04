@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/box.iml" filepath="$PROJECT_DIR$/box.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sideload.iml" filepath="$PROJECT_DIR$/sideload.iml" />
     </modules>
   </component>
 </project>
