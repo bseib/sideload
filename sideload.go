@@ -12,13 +12,10 @@ func main() {
 	var homeConfig = config.GetHomeConfig()
 
 	// Subcommand flags
-	initFlagSet := flag.NewFlagSet("init", flag.ExitOnError)
+	restoreFlagSet := flag.NewFlagSet("store", flag.ExitOnError)
+	var restoreForce = restoreFlagSet.Bool("f", false, "Force specified files to be restored")
 	storeFlagSet := flag.NewFlagSet("store", flag.ExitOnError)
 	var storeForce = storeFlagSet.Bool("f", false, "Force specified files to be stored")
-
-	// init flags
-	//	var initYo = initFlagSet.String("yo", "", "yo yo yo")
-	//	var statusYo = statusFlagSet.String("yo", "", "yo yo yo")
 
 	// Verify that a subcommand has been provided
 	// os.Arg[0] is the main command
@@ -28,10 +25,10 @@ func main() {
 	} else {
 		switch os.Args[1] {
 		case "init":
-			initFlagSet.Parse(os.Args[2:])
-			command.Init(initFlagSet, homeConfig)
+			command.Init(homeConfig)
 		case "restore":
-			command.Restore()
+			restoreFlagSet.Parse(os.Args[2:])
+			command.Restore(config.GetSideloadConfig(homeConfig), restoreFlagSet.Args(), *restoreForce)
 		case "status":
 			command.Status(config.GetSideloadConfig(homeConfig))
 		case "store":
