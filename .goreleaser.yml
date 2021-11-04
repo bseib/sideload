@@ -14,6 +14,11 @@ builds:
       - freebsd
       - linux
       - windows
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
     ldflags:
       - -s -w -X main.Version={{.Version}}
       - -s -w -X main.Commit={{.ShortCommit}}
