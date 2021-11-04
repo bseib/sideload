@@ -4,8 +4,16 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 	"sideload/command"
 	"sideload/config"
+)
+
+// real values set at link time with go -ldflags
+var (
+	Version string = "0.0.0"
+	Commit  string = "000000"
+	BuiltAt string = "000000"
 )
 
 func main() {
@@ -36,6 +44,8 @@ func main() {
 		case "store":
 			storeFlagSet.Parse(os.Args[2:])
 			command.Store(config.GetSideloadConfig(homeConfig), storeFlagSet.Args(), *storeForce)
+		case "version":
+			fmt.Printf("sideload version %v  %v  built %v  %v/%v\n", Version, Commit, BuiltAt, runtime.GOOS, runtime.GOARCH)
 		default:
 			dieUsage()
 		}
@@ -54,7 +64,8 @@ func dieUsage() {
 		"   init      init a directory to manage its sideloaded (tracked) files\n" +
 		"   status    show which tracked files would be copied to/from storage\n" +
 		"   store     store tracked files to storage dir, if they are newer\n" +
-		"   restore   restore tracked files to local project dir from storage, if they are newer\n")
+		"   restore   restore tracked files to local project dir from storage, if they are newer\n" +
+		"   version   print sideload version information\n")
 	flag.PrintDefaults()
 	os.Exit(1)
 }
