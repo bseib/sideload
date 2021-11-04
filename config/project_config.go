@@ -87,7 +87,11 @@ func GetProjectConfig() ProjectConfig {
 	//fmt.Println(string(data))
 	tomlConfig := ProjectConfigToml{}
 	_, err = toml.Decode(string(data), &tomlConfig)
-	util.CheckFatal(err)
+	if err != nil {
+		fmt.Printf("Error parsing file '%v':\n", path)
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	config := ProjectConfig{
 		ProjectDir: filepath.Dir(path),

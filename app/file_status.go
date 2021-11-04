@@ -57,7 +57,7 @@ func getFileSituation(file string) FileSituation {
 		}
 	} else {
 		return FileSituation{
-			exists:  false,
+			exists:  true,
 			modTime: stat.ModTime(),
 			md5Hash: md5Hash(file),
 		}
@@ -67,6 +67,8 @@ func getFileSituation(file string) FileSituation {
 func GetFileComparison(relativeFile string, homeFile string, projectFile string) FileComparison {
 	hfile := getFileSituation(homeFile)
 	pfile := getFileSituation(projectFile)
+	//fmt.Printf("hfile=%#v\n", hfile)
+	//fmt.Printf("pfile=%#v\n", pfile)
 	inclination := NONE
 	if !hfile.exists && pfile.exists {
 		inclination = WILL_STORE
@@ -97,8 +99,7 @@ func CompareProjectFiles(sideloadConfig config.SideloadConfig) []FileComparison 
 	sort.Strings(fileList)
 	comparisons := make([]FileComparison, len(fileList))
 	for i, file := range fileList {
-		projectDir := filepath.Join(sideloadConfig.HomeConfig.StorageDir, sideloadConfig.ProjectConfig.Project.Name)
-		homeFile := filepath.Join(projectDir, file)
+		homeFile := filepath.Join(sideloadConfig.HomeProjectDir, file)
 		projectFile := filepath.Join(sideloadConfig.ProjectConfig.ProjectDir, file)
 		comparison := GetFileComparison(file, homeFile, projectFile)
 		comparisons[i] = comparison
