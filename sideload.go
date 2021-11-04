@@ -24,6 +24,8 @@ func main() {
 		dieUsage()
 	} else {
 		switch os.Args[1] {
+		case "diff":
+			command.Diff(config.GetSideloadConfig(homeConfig))
 		case "init":
 			command.Init(homeConfig)
 		case "restore":
