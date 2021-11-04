@@ -6,3 +6,5 @@
 /.idea/tasks.xml
 /.idea/shelf
 testdir
+
+dist/
