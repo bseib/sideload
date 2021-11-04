@@ -10,7 +10,8 @@ import (
 )
 
 type HomeConfig struct {
-	homeDirPath string
+	HomeDir    string
+	StorageDir string
 }
 
 func getBoxHomeDirEnv() string {
@@ -33,6 +34,7 @@ func getBoxHomeDirPath() string {
 
 func GetHomeConfig() HomeConfig {
 	boxHomeDirPath := getBoxHomeDirPath()
+	boxStorageDir := filepath.Join(filepath.Clean(boxHomeDirPath), "storage")
 	if _, err := os.Stat(boxHomeDirPath); os.IsNotExist(err) {
 		var boxHomeDirEnv = getBoxHomeDirEnv()
 		if len(boxHomeDirEnv) == 0 {
@@ -48,7 +50,6 @@ func GetHomeConfig() HomeConfig {
 			if err != nil {
 				log.Fatal(err)
 			}
-			boxStorageDir := filepath.Join(filepath.Clean(boxHomeDirPath), "storage")
 			err = os.Mkdir(boxStorageDir, 0700)
 			if err != nil {
 				log.Fatal(err)
@@ -59,6 +60,7 @@ func GetHomeConfig() HomeConfig {
 		}
 	}
 	return HomeConfig{
-		homeDirPath: boxHomeDirPath,
+		HomeDir:    boxHomeDirPath,
+		StorageDir: boxStorageDir,
 	}
 }

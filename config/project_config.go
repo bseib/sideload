@@ -24,9 +24,15 @@ type Files struct {
 	Track []string
 }
 
-type ProjectConfig struct {
+type ProjectConfigToml struct {
 	Project Project `toml:"project"`
 	Files   Files   `toml:"files"`
+}
+
+type ProjectConfig struct {
+	ProjectDir string
+	Project    Project
+	Files      Files
 }
 
 func getCurrentDir() string {
@@ -79,10 +85,15 @@ func GetProjectConfig() ProjectConfig {
 	//fmt.Printf("filepath=%v\n", path)
 	data, err := os.ReadFile(path)
 	//fmt.Println(string(data))
-	config := ProjectConfig{}
-	_, err = toml.Decode(string(data), &config)
+	tomlConfig := ProjectConfigToml{}
+	_, err = toml.Decode(string(data), &tomlConfig)
 	util.CheckFatal(err)
 
+	config := ProjectConfig{
+		ProjectDir: filepath.Dir(path),
+		Project: tomlConfig.Project,
+		Files: tomlConfig.Files,
+	}
 	if len(config.Project.Name) == 0 {
 		util.Fatal(fmt.Sprintf("Project name cannot be empty in '%s'.", path))
 	}

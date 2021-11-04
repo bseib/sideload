@@ -6,14 +6,14 @@ package config
 //}
 
 type BoxConfig struct {
-	homeConfig    HomeConfig
-	projectConfig ProjectConfig
+	HomeConfig    HomeConfig
+	ProjectConfig ProjectConfig
 }
 
 func GetBoxConfig(homeConfig HomeConfig) BoxConfig {
 	projectConfig := GetProjectConfig()
 	return BoxConfig{
-		projectConfig: projectConfig,
-		homeConfig:    homeConfig,
+		ProjectConfig: projectConfig,
+		HomeConfig:    homeConfig,
 	}
 }
