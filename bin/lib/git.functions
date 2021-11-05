@@ -1,0 +1,67 @@
+
+## this file can be sourced into scripts to have access to git functions
+
+function gitIsClean {
+  local BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+  ## make sure we have a clean slate, everything checked in...
+  local DIRTY=$(git diff-index --name-only HEAD --)
+  if [ -n "$DIRTY" ]; then
+      echo "Your branch ${BRANCH} is not clean. You have uncommitted files."
+      exit 1;
+  fi
+}
+
+function gitIsOnBranch {
+  local TARGET=$1
+  BRANCH=`git rev-parse --abbrev-ref HEAD`
+  if [ "${TARGET}" != "${BRANCH}" ]; then
+      echo "You must be on the '${TARGET}' branch to run this script."
+      exit 1;
+  fi
+}
+
+##-----------------------------------------------------------------------------
+## $BRANCH_NAME=gitBranchName()
+##-----------------------------------------------------------------------------
+function gitBranchName {
+  local  __resultvar=$1
+  local _branchname=$(git rev-parse --abbrev-ref HEAD)
+  eval $__resultvar="'$_branchname'"
+}
+
+function gitRepoName {
+  local  __resultvar=$1
+  local _gitpath=$(git rev-parse --show-toplevel 2> /dev/null)
+  ## _gitpath is empty if we're not in a git repo
+  if [ "x" = "x$_gitpath" ]; then
+    echo "You are not in a git repo directory."
+    exit 1
+  else
+    local repoName=`basename ${_gitpath}`
+    eval $__resultvar="'$repoName'"
+  fi
+}
+
+
+##-----------------------------------------------------------------------------
+## $VERSTAG=gitGetNewestVersionTag($TAG_SEARCH_PATTERN)
+##
+## call `git tag -l "$TAG_SEARCH_PATTERN" --sort=-version:refname` and return
+## the first value back. Be prepared for an empty list coming back.
+##-----------------------------------------------------------------------------
+function gitGetNewestVersionTag {
+  local  __resultvar=$1
+  local _TAG_SEARCH_PATTERN=$2
+  ## make sure we have the latest tags from the server repo
+  $(git fetch origin 'refs/tags/*:refs/tags/*' > /dev/null 2>&1)
+  ## grab newest version matching our pattern
+  ## The business with versionsort.prereleaseSuffix is so that if a MILESTONE
+  ## suffix exists, it will not be at the head of the list and allow the naked
+  ## version to be at the top. See:
+  ## https://git-scm.com/docs/git-tag#git-tag---sortltkeygt  and
+  ## https://git.kaarsemaker.net/git/commit/d811c8e17c652e62a97e75abf80dfea5d81ef309/
+  #local _TOPVERS=$(git tag -l "${TAG_SEARCH_PATTERN}" --sort=-version:refname | head -n 1)
+  local _TOPVERS=$(git -c versionsort.prereleaseSuffix="-MILESTONE" tag -l "${TAG_SEARCH_PATTERN}" --sort=-version:refname | head -n 1)
+  eval $__resultvar="'$_TOPVERS'"
+}

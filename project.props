@@ -1,0 +1,4 @@
+## The version.sh shell script will edit the version property (and git tags too).
+## The script doesn't care if you have other content in this file too. It can isolate and
+## substitute the version line by itself.
+version=0.1.6

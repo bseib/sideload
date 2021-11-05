@@ -1,0 +1,22 @@
+
+function propsSetVersion {
+  sed -i.backup 's|\s*version\s*=.*$|version='$1'|' project.props
+}
+
+function propsCommitVersion {
+  rm project.props.backup
+}
+
+## get the current version
+function propsGetCurrentVersion {
+  local  __resultvar=$1
+  local _vers=$(sed -n 's/^\(\s*version\s*=\s*\(.*\)\)$/\2/p' project.props)
+
+  ## _vers should not be empty unless something bad happened
+  if [ "x" = "x$_vers" ]; then
+    echo "Can't get version from project.props file"
+    exit 1
+  else
+    eval $__resultvar="'$_vers'"
+  fi
+}
