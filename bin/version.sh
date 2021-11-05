@@ -292,10 +292,6 @@ function assignVersion {
   propsSetVersion ${_BUMPED_VERS}
 	propsCommitVersion
 
-  ## write version string to a text file for our app to read
-  echo ${_BUMPED_VERS} > ${VERS_TXT_FILE}
-
-
   ## watch commands as they execute. set +xv negates this
   set -xv
 
