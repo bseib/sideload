@@ -2,12 +2,12 @@ package command
 
 import (
 	"fmt"
+	"github.com/bseib/sideload/app"
+	"github.com/bseib/sideload/config"
 	"github.com/hexops/gotextdiff"
 	"github.com/hexops/gotextdiff/myers"
 	"github.com/hexops/gotextdiff/span"
 	"os"
-	"github.com/bseib/sideload/app"
-	"github.com/bseib/sideload/config"
 )
 
 func Diff(sideloadConfig config.SideloadConfig) {

@@ -2,7 +2,7 @@
 
 Sideload files (which are not source controlled) in and out of a project.
 
-Inevitably we end up with files in my project that we do not want in source control, but still would like to manage
+Inevitably we end up with files in a project that we do not want in source control, but still would like to manage
 in some fashion. A list of files is kept in a `.sideload-config` file. When you run `sideload restore` in your project
 directory, the list of tracked files found in `.sideload.config` is copied from `~/.sideload/storage/{project_name}/...`
 into the local project directory tree.

@@ -12,7 +12,7 @@ func CheckFatal(err error) {
 	}
 }
 
-func Fatal(message string) {
-	fmt.Println(message)
+func Fatal(v ...interface{}) {
+	fmt.Println(fmt.Sprint(v...))
 	os.Exit(1)
 }

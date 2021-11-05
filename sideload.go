@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
-	"runtime"
 	"github.com/bseib/sideload/command"
 	"github.com/bseib/sideload/config"
+	"os"
+	"runtime"
 )
 
 // real values set at link time with go -ldflags

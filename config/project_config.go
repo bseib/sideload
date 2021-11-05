@@ -5,10 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"log"
+	"github.com/bseib/sideload/util"
 	"os"
 	"path/filepath"
-	"github.com/bseib/sideload/util"
 	"strings"
 )
 
@@ -16,7 +15,6 @@ const CONFIG_FILENAME = ".sideload-config"
 
 type Project struct {
 	Name string
-//	Uuid string
 }
 
 type Files struct {
@@ -37,7 +35,7 @@ type ProjectConfig struct {
 func getCurrentDir() string {
 	currentDir, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err)
+		util.Fatal(err)
 	}
 	return currentDir
 }
@@ -82,9 +80,7 @@ func GetProjectConfig() ProjectConfig {
 		fmt.Printf("This directory has not been initialized to use sideload. Try 'sideload init' to create a '%s' file.\n", CONFIG_FILENAME)
 		os.Exit(1)
 	}
-	//fmt.Printf("filepath=%v\n", path)
 	data, err := os.ReadFile(path)
-	//fmt.Println(string(data))
 	tomlConfig := ProjectConfigToml{}
 	_, err = toml.Decode(string(data), &tomlConfig)
 	if err != nil {
@@ -95,15 +91,12 @@ func GetProjectConfig() ProjectConfig {
 
 	config := ProjectConfig{
 		ProjectDir: filepath.Dir(path),
-		Project: tomlConfig.Project,
-		Files: tomlConfig.Files,
+		Project:    tomlConfig.Project,
+		Files:      tomlConfig.Files,
 	}
 	if len(config.Project.Name) == 0 {
 		util.Fatal(fmt.Sprintf("Project name cannot be empty in '%s'.", path))
 	}
-	//if len(config.Project.Uuid) == 0 {
-	//	util.Fatal(fmt.Sprintf("Project uuid cannot be empty in '%s'.", path))
-	//}
 	if config.Files.Track == nil {
 		config.Files.Track = []string{}
 	}
@@ -112,22 +105,13 @@ func GetProjectConfig() ProjectConfig {
 
 func WriteDefaultConfig() {
 	currentDir := filepath.Base(getCurrentDir())
-	//projectId := uuid.New().String()
-	writeConfig(currentDir, /*projectId,*/ []string{})
+	writeConfig(currentDir, []string{})
 }
 
-func writeConfig(projectName string, /*projectId string,*/ files []string) {
+func writeConfig(projectName string, files []string) {
 	fileList := strings.Join(util.MapOfString(files, func(s string) string {
 		return fmt.Sprintf("  '%v'", s)
 	}), ",")
-// A uuid would be used to disambiguate projects with the same name.
-/*
-   ##
-   ## Tracked files for this project ultimately get stored in $SIDELOADHOME, under this uuid.
-   ##
-   uuid = '%s'
- */
-
 	defaultConfigDoc := []byte(fmt.Sprintf(`[project]
 ##
 ## This is a human readable name representing this set of tracked files.
@@ -148,9 +132,9 @@ track = [
 %s
 ]
 
-`, projectName, /*projectId,*/ fileList))
+`, projectName /*projectId,*/, fileList))
 	err := os.WriteFile(CONFIG_FILENAME, defaultConfigDoc, 0644)
 	if err != nil {
-		log.Fatal(err)
+		util.Fatal(err)
 	}
 }

@@ -3,11 +3,11 @@ package app
 import (
 	"crypto/md5"
 	"fmt"
+	"github.com/bseib/sideload/config"
+	"github.com/bseib/sideload/util"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
-	"github.com/bseib/sideload/config"
 	"sort"
 	"time"
 )
@@ -45,12 +45,12 @@ type FileSituation struct {
 func md5Hash(file string) string {
 	f, err := os.Open(file)
 	if err != nil {
-		log.Fatal(err)
+		util.Fatal(err)
 	}
 	defer f.Close()
 	h := md5.New()
 	if _, err := io.Copy(h, f); err != nil {
-		log.Fatal(err)
+		util.Fatal(err)
 	}
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
@@ -75,8 +75,6 @@ func getFileSituation(file string) FileSituation {
 func GetFileComparison(relativeFile string, homeFile string, projectFile string) FileComparison {
 	hfile := getFileSituation(homeFile)
 	pfile := getFileSituation(projectFile)
-	//fmt.Printf("hfile=%#v\n", hfile)
-	//fmt.Printf("pfile=%#v\n", pfile)
 	inclination := NONE
 	if !hfile.exists && pfile.exists {
 		inclination = WILL_STORE

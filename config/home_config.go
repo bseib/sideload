@@ -3,7 +3,7 @@ package config
 import (
 	"bufio"
 	"fmt"
-	"log"
+	"github.com/bseib/sideload/util"
 	"os"
 	"path/filepath"
 	"strings"
@@ -24,7 +24,7 @@ func getSideloadHomeDirPath() string {
 		homedir, err := os.UserHomeDir()
 		if err != nil {
 			fmt.Println("Cannot determine your home directory.")
-			log.Fatal(err)
+			util.Fatal(err)
 		}
 		return filepath.Join(filepath.Clean(homedir), ".sideload")
 	} else {
@@ -48,11 +48,11 @@ func GetHomeConfig() HomeConfig {
 			fmt.Printf("Creating directory '%v'.\n", sideloadHomeDirPath)
 			err = os.MkdirAll(sideloadHomeDirPath, 0700)
 			if err != nil {
-				log.Fatal(err)
+				util.Fatal(err)
 			}
 			err = os.MkdirAll(sideloadStorageDir, 0700)
 			if err != nil {
-				log.Fatal(err)
+				util.Fatal(err)
 			}
 		} else {
 			fmt.Println("A SIDELOADHOME directory is required and must exist to do anything.")

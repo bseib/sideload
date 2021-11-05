@@ -2,10 +2,10 @@ package command
 
 import (
 	"fmt"
-	"os"
 	"github.com/bseib/sideload/app"
 	"github.com/bseib/sideload/config"
 	"github.com/bseib/sideload/util"
+	"os"
 )
 
 func Restore(sideloadConfig config.SideloadConfig, specificFiles []string, isForce bool) {
